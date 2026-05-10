@@ -1,4 +1,5 @@
 #include "DisplayState.h"
+#include "DisplayManagerConstants.h"
 
 class DisplayManager {
     private:
@@ -6,8 +7,7 @@ class DisplayManager {
         void updateDisplay();
     
     public:
-    DisplayManager();
-    DisplayManager(DisplayState initialState);
+    DisplayManager(DisplayState initialState = DisplayManagerConstants::DEFAULT_STATE);
     DisplayState getCurrentDisplayState();
     void setCurrentDisplayState(DisplayState newState);
 };
