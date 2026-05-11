@@ -45,16 +45,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # Necessary for the AI to see the code diff
+          fetch-depth: 0
 
       - name: Gemini Code Review
         uses: sshnaidm/gemini-code-review-action@v2
         with:
-          # CRITICAL: This is the fix for your specific error
           gemini-key: ${{ secrets.GEMINI_API_KEY }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          model: "gemini-1.5-flash"
-          # Custom instructions for your specific project
+          # Updated to a 2026 stable model ID
+          model: "gemini-3-flash-preview"
           prompt: |
             You are an expert C++ and Embedded Systems engineer. 
             Review this ESP32-C3 code for:
