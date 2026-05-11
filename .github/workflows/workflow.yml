@@ -33,24 +33,25 @@ jobs:
         run: pio run
 
   # JOB 2: CLEAN CODE & AI REVIEW
-  # This uses Gemini to analyze the diff and post comments directly on the PR
   review:
     name: AI Clean Code Review
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      pull-requests: write
+      pull-requests: write # Essential for posting comments
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      - name: Gemini Code Review
-        # Using a popular community action designed for Gemini-based reviews
-        uses: google-github-actions/run-gemini-cli@v1 
         with:
-          google_api_key: ${{ secrets.GEMINI_API_KEY }}
-          gemini_model: 'gemini-3-flash'
-          # Custom prompt to ensure it respects your hardware constraints
+          fetch-depth: 0 # AI needs full history to see the 'diff'
+
+      - name: Gemini AI Code Review
+        # Using a specialized action for inline PR reviews
+        uses: sshnaidm/gemini-code-review-action@v2
+        with:
+          gemini-key: ${{ secrets.GEMINI_API_KEY }}
+          github-token: ${{ secrets.GITHUB_TOKEN }} # Provided by GitHub automatically
+          model: "gemini-3-flash"
           prompt: |
             You are an expert Embedded Systems Engineer. 
             Review this Pull Request for an ESP32-C3 Spotify Controller.
@@ -58,4 +59,4 @@ jobs:
             - Identify memory leaks or risky pointer arithmetic.
             - Flag SPI bus conflicts or inefficient display updates for the ILI9341.
             - Ensure the reactive state machine is robust.
-            Please leave specific, actionable comments on the code.
+            Leave comments directly on the lines of code that need improvement.
