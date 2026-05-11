@@ -10,4 +10,5 @@ class DisplayManager {
     DisplayManager(DisplayState initialState = DisplayManagerConstants::DEFAULT_STATE);
     DisplayState getCurrentDisplayState();
     void setCurrentDisplayState(DisplayState newState);
+    void loop();
 };

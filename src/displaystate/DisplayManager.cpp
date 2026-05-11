@@ -6,6 +6,9 @@ DisplayManager::DisplayManager(DisplayState initialState){
     this->updateDisplay();
 }
 
+void DisplayManager::updateDisplay() {
+}
+
 DisplayState DisplayManager::getCurrentDisplayState() {
     return this->currentState;
 }
@@ -14,6 +17,9 @@ void DisplayManager::setCurrentDisplayState(DisplayState newState) {
     this->currentState = newState;
 }
 
-void DisplayManager::updateDisplay() {
+void DisplayManager::loop() {
+    // This function can be used to handle any periodic updates to the display
 }
+
+
 
