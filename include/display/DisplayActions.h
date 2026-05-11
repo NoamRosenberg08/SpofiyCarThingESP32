@@ -7,4 +7,4 @@ class DisplayActions{
         static void displayLibraryMenu(/*todo insert a screen here*/);
         static void displayCurrentSongScreen(/*todo insert a screen here*/);
     
-}
+};
