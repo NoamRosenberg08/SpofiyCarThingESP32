@@ -4,7 +4,7 @@
 class DisplayManager {
     private:
         DisplayState currentState;
-        void updateDisplay();
+        void updateDisplayByState(DisplayState state);
     
     public:
     DisplayManager(DisplayState initialState = DisplayManagerConstants::DEFAULT_STATE);
