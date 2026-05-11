@@ -2,12 +2,13 @@ name: Spotify Controller CI/CD
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ master ]
+    branches: [master]
 
 jobs:
   # JOB 1: COMPILE THE CODE
+  # This ensures your ESP32-C3 code actually compiles before reviewing it
   build:
     name: Build Firmware (PlatformIO)
     runs-on: ubuntu-latest
@@ -24,7 +25,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.9'
+          python-version: "3.9"
 
       - name: Install PlatformIO
         run: pip install --upgrade platformio
@@ -32,9 +33,10 @@ jobs:
       - name: Run Build
         run: pio run
 
-  # JOB 2: CLEAN CODE & AI REVIEW
+  # JOB 2: AI CODE REVIEW
+  # This job will now correctly receive your API Key
   review:
-    name: AI Clean Code Review
+    name: Gemini AI Review
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -43,20 +45,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # Important for comparing code changes
+          fetch-depth: 0 # Necessary for the AI to see the code diff
 
-      - name: Gemini AI Code Review
+      - name: Gemini Code Review
         uses: sshnaidm/gemini-code-review-action@v2
         with:
-          # This maps your GitHub Secret to the Action's required input
+          # CRITICAL: This is the fix for your specific error
           gemini-key: ${{ secrets.GEMINI_API_KEY }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          model: "gemini-1.5-flash" # Stable version for free-tier automation
+          model: "gemini-1.5-flash"
+          # Custom instructions for your specific project
           prompt: |
-            You are an expert Embedded Systems Engineer. 
-            Review this Pull Request for an ESP32-C3 Spotify Controller.
-            - Check for C++ "Clean Code" principles.
-            - Identify memory leaks or risky pointer arithmetic.
-            - Flag SPI bus conflicts or inefficient display updates for the ILI9341.
-            - Ensure the reactive state machine is robust.
-            Leave comments directly on the lines of code that need improvement.
+            You are an expert C++ and Embedded Systems engineer. 
+            Review this ESP32-C3 code for:
+            1. Correct SPI pin management for the ILI9341 display.
+            2. Memory efficiency (avoiding fragmentation in long-running states).
+            3. Thread safety for the Spotify state machine.
