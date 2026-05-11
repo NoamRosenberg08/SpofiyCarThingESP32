@@ -38,20 +38,20 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      pull-requests: write # Essential for posting comments
+      pull-requests: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # AI needs full history to see the 'diff'
+          fetch-depth: 0 # Important for comparing code changes
 
       - name: Gemini AI Code Review
-        # Using a specialized action for inline PR reviews
         uses: sshnaidm/gemini-code-review-action@v2
         with:
+          # This maps your GitHub Secret to the Action's required input
           gemini-key: ${{ secrets.GEMINI_API_KEY }}
-          github-token: ${{ secrets.GITHUB_TOKEN }} # Provided by GitHub automatically
-          model: "gemini-3-flash"
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          model: "gemini-1.5-flash" # Stable version for free-tier automation
           prompt: |
             You are an expert Embedded Systems Engineer. 
             Review this Pull Request for an ESP32-C3 Spotify Controller.
