@@ -58,6 +58,6 @@ jobs:
           prompt: |
             You are an expert C++ and Embedded Systems engineer. 
             Review this ESP32-C3 code for:
-            1. Correct SPI pin management for the ILI9341 display.
+            1. Clean Code, good code habits, SOLID principles, and maintainability.
             2. Memory efficiency (avoiding fragmentation in long-running states).
             3. Thread safety for the Spotify state machine.
