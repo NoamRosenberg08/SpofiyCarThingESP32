@@ -1,5 +1,7 @@
+// DisplayManagerConstants.h
+#pragma once
 #include "DisplayState.h"
 
 namespace DisplayManagerConstants {
-    const DisplayState DEFAULT_STATE = DisplayState::MAIN_MENU;
+    inline constexpr DisplayState DEFAULT_STATE = DisplayState::MAIN_MENU;
 }
