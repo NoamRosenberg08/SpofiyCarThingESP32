@@ -1,0 +1,61 @@
+name: Spotify Controller CI/CD
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  # JOB 1: COMPILE THE CODE
+  build:
+    name: Build Firmware (PlatformIO)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Cache PlatformIO
+        uses: actions/cache@v3
+        with:
+          path: ~/.platformio
+          key: ${{ runner.os }}-platformio-${{ hashFiles('**/platformio.ini') }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install PlatformIO
+        run: pip install --upgrade platformio
+
+      - name: Run Build
+        run: pio run
+
+  # JOB 2: CLEAN CODE & AI REVIEW
+  # This uses Gemini to analyze the diff and post comments directly on the PR
+  review:
+    name: AI Clean Code Review
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Gemini Code Review
+        # Using a popular community action designed for Gemini-based reviews
+        uses: google-github-actions/run-gemini-cli@v1 
+        with:
+          google_api_key: ${{ secrets.GEMINI_API_KEY }}
+          gemini_model: 'gemini-3-flash'
+          # Custom prompt to ensure it respects your hardware constraints
+          prompt: |
+            You are an expert Embedded Systems Engineer. 
+            Review this Pull Request for an ESP32-C3 Spotify Controller.
+            - Check for C++ "Clean Code" principles.
+            - Identify memory leaks or risky pointer arithmetic.
+            - Flag SPI bus conflicts or inefficient display updates for the ILI9341.
+            - Ensure the reactive state machine is robust.
+            Please leave specific, actionable comments on the code.
